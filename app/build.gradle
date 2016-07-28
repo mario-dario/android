@@ -17,6 +17,13 @@ android {
             proguardFiles getDefaultProguardFile('proguard-android.txt'), 'proguard-rules.pro'
         }
     }
+    useLibrary 'org.apache.http.legacy'
+}
+
+repositories {
+    flatDir {
+        dirs 'libs'
+    }
 }
 
 dependencies {
@@ -24,4 +31,8 @@ dependencies {
     compile(name: 'dariosharedclasses-debug', ext: 'aar')
     testCompile 'junit:junit:4.12'
     compile 'com.android.support:appcompat-v7:23.4.0'
+    compile 'com.android.support:design:23.4.0'
+    compile 'org.apache.httpcomponents:httpclient:4.5.1'
+
+    compile(name: 'NeuraStandaloneSDK-release', ext: 'aar')
 }
