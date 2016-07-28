@@ -10,6 +10,9 @@ import android.support.v4.app.NotificationCompat;
 import android.util.Log;
 
 import com.development.dariopal.R;
+import com.development.dariopal.otto.BusManager;
+import com.development.dariopal.otto.Const;
+import com.development.dariopal.otto.events.BaseEvent;
 import com.neura.standalonesdk.events.NeuraEvent;
 import com.neura.standalonesdk.events.NeuraGCMCommandFactory;
 
@@ -25,7 +28,8 @@ public class NeuraReceiver extends BroadcastReceiver {
             NeuraEvent event = NeuraGCMCommandFactory.getInstance().getEvent(intent);
             String eventText = event != null ? event.toString() : "couldn't parse data";
             Log.i(getClass().getSimpleName(), "received Neura event - " + eventText);
-            generateNotification(context, eventText);
+//            generateNotification(context, eventText);
+            BusManager.getInstance().post(new BaseEvent(Const.PUSH_EVENT));
         }
     }
 

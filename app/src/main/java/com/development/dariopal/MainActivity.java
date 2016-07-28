@@ -1,6 +1,5 @@
 package com.development.dariopal;
 
-import android.app.Activity;
 import android.content.Intent;
 import android.support.v4.app.FragmentActivity;
 import android.support.v7.app.AppCompatActivity;
@@ -8,13 +7,16 @@ import android.os.Bundle;
 import android.util.Log;
 import android.view.View;
 import android.widget.Button;
+import android.widget.Toast;
 
 import com.development.dariopal.neura_manager.Constants;
 import com.development.dariopal.neura_manager.NeuraManager;
-import com.neura.sdk.object.AuthenticationRequest;
+import com.development.dariopal.otto.BusManager;
+import com.development.dariopal.otto.Const;
+import com.development.dariopal.otto.events.BaseEvent;
 import com.neura.sdk.object.Permission;
 import com.neura.sdk.service.SubscriptionRequestCallbacks;
-import com.neura.standalonesdk.util.SDKUtils;
+import com.squareup.otto.Subscribe;
 
 import java.util.ArrayList;
 
@@ -26,16 +28,35 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
-        findVies();
+        findViews();
         setListeners();
+        BusManager.getInstance().register(this);
         NeuraManager.getInstance().initNeuraConnection(this);
+    }
+
+    @Override
+    protected void onStop() {
+        super.onStop();
+        BusManager.getInstance().unregister(this);
+    }
+
+    @Subscribe
+    public void pushArrived(BaseEvent baseEvent){
+        switch (baseEvent.getEventType()){
+            case Const.DB_EVENT:
+                break;
+            case Const.PUSH_EVENT:
+                Toast.makeText(MainActivity.this, "Push received", Toast.LENGTH_SHORT).show();
+                break;
+
+        }
     }
 
     private void setListeners() {
         btnLoginNeura.setOnClickListener(this);
     }
 
-    private void findVies() {
+    private void findViews() {
         btnLoginNeura = (Button)findViewById(R.id.btnLogin);
     }
 
@@ -89,8 +110,6 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
         if (NeuraManager.getInstance().getClient() != null)
             NeuraManager.getInstance().getClient().disconnect();
     }
-
-
 
 
 }
