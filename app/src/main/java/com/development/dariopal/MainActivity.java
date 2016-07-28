@@ -54,21 +54,8 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
      */
     @Override
     public void onActivityResult(int requestCode, int resultCode, Intent data) {
-        if (requestCode == Constants.NEURA_AUTHENTICATION_REQUEST_CODE && resultCode == FragmentActivity.RESULT_OK) {
-            /**
-             * {@link com.neura.standalonesdk.service.NeuraApiClient#registerPushServerApiKey(Activity, String)}
-             * isn't mandatory, only if you want Neura to handle events and let you know when
-             * an event occurs. Register with your project_id.
-             * Further more, please see explanation in
-             * {@link FragmentSubscribe#subscribeToFromEvent(String, boolean)}
-             */
-            getMainActivity().getClient().registerPushServerApiKey(getMainActivity(), getString(R.string.google_api_project_number));
-            Log.i(getClass().getSimpleName(), "Successfully logged in with accessToken : "
-                    + SDKUtils.extractToken(data));
-        } else {
-            loadProgress(false);
-            mRequestPermissions.setEnabled(true);
-        }
+
+
     }
 
 
