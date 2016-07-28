@@ -1,4 +1,4 @@
-package com.development.dariopal.db;
+package com.development.dariopal.database;
 
 
 import com.orm.SugarRecord;

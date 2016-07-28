@@ -1,7 +1,6 @@
-package com.development.dariopal.db;
+package com.development.dariopal.database;
 
 import java.sql.Time;
-import java.util.ArrayList;
 import java.util.List;
 
 
