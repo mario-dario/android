@@ -13,9 +13,9 @@ public class DarioPalDaoApi implements DaoInterface {
   }
 
   @Override
-  public List<EventRecord> getRecordsInTimeRange(Time start, Time end) {
+  public List<EventRecord> getRecordsInTimeRange(Long tStart, Long tEnd) {
       List<EventRecord> resultRecords = EventRecord.find(EventRecord.class,
-          "timeStamp <= ? and timeStamp >= ?", end.toString(), start.toString());
+          "timeStamp <= ? and timeStamp >= ?", tEnd.toString(), tStart.toString());
     return resultRecords;
   }
 
@@ -27,9 +27,9 @@ public class DarioPalDaoApi implements DaoInterface {
   }
 
   @Override
-  public List<EventRecord> getAllWithTypeInRange(Time start, Time end, String type) {
+  public List<EventRecord> getAllWithTypeInRange(Long tStart, Long tEnd, String type) {
     List<EventRecord> resultRecords = EventRecord.find(EventRecord.class,
-        "timeStamp <= ? and timeStamp >= ? and type = ?", end.toString(), start.toString(), type);
+        "timeStamp <= ? and timeStamp >= ? and type = ?", tEnd.toString(), tStart.toString(), type);
     return resultRecords;
   }
 

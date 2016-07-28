@@ -1,4 +1,4 @@
-package com.labstyle.darioandroid.dariosharedclasses;
+package com.development.dariopal.dario;
 
 /**
  * Created by mario on 27/07/16.

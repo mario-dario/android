@@ -1,4 +1,4 @@
-package com.labstyle.darioandroid.dariosharedclasses;
+package com.development.dariopal.dario;
 
 import java.io.Serializable;
 

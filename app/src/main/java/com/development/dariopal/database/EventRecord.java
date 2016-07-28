@@ -7,15 +7,18 @@ import java.sql.Time;
 
 public class EventRecord extends SugarRecord{
   String type; // type of activity
-  float value; // value of measurement etc
+  String value; // value of measurement etc
   String meta; // for later
-  Time timeStamp;
+//  Time timeStamp;
+  Long timeStamp;
 
   public EventRecord() {
     this.type = "none";
   }
 
-  public EventRecord(String type, float value, String meta, Time timeStamp) {
+
+
+  public EventRecord(String type, String value, String meta, Long timeStamp) {
     this.type = type;
     this.value = value;
     this.meta = meta;
@@ -23,9 +26,26 @@ public class EventRecord extends SugarRecord{
   }
 
 
-  public EventRecord(String type, float value, Time timeStamp) {
+  public EventRecord(String type, String value, Long timeStamp) {
     this.type = type;
     this.value = value;
     this.timeStamp = timeStamp;
+  }
+
+
+  public String getType() {
+    return type;
+  }
+
+  public String getValue() {
+    return value;
+  }
+
+  public String getMeta() {
+    return meta;
+  }
+
+  public Long getTimeStamp() {
+    return timeStamp;
   }
 }

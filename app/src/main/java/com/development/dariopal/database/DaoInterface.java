@@ -8,10 +8,10 @@ public interface DaoInterface {
 
   List<EventRecord> getAllRecords();
 
-  List<EventRecord> getRecordsInTimeRange(Time start, Time end);
+  List<EventRecord> getRecordsInTimeRange(Long tStart, Long tEnd);
 
   List<EventRecord> getAllWithType (String type);
 
-  List<EventRecord> getAllWithTypeInRange(Time start, Time end, String type);
+  List<EventRecord> getAllWithTypeInRange(Long tStart, Long tEnd, String type);
 
 }
