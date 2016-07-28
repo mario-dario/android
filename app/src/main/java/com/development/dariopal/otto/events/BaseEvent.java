@@ -3,7 +3,7 @@ package com.development.dariopal.otto.events;
 /**
  * Created by rt_okun on 28/07/2016.
  */
-public class BaseEvent{
+public abstract class BaseEvent{
 
     private int eventType;
 

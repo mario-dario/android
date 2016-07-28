@@ -30,14 +30,20 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
         setContentView(R.layout.activity_main);
         findViews();
         setListeners();
-        BusManager.getInstance().register(this);
         NeuraManager.getInstance().initNeuraConnection(this);
     }
 
     @Override
-    protected void onStop() {
-        super.onStop();
+    protected void onResume() {
+        super.onResume();
+        BusManager.getInstance().register(this);
+    }
+
+
+    @Override
+    protected void onPause() {
         BusManager.getInstance().unregister(this);
+        super.onPause();
     }
 
     @Subscribe
@@ -45,7 +51,7 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
         switch (baseEvent.getEventType()){
             case Const.DB_EVENT:
                 break;
-            case Const.PUSH_EVENT:
+            case Const.NEURA_PUSH_EVENT:
                 Toast.makeText(MainActivity.this, "Push received", Toast.LENGTH_SHORT).show();
                 break;
 

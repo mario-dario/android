@@ -11,28 +11,18 @@ import com.squareup.otto.Bus;
  */
 public class BusManager {
 
-    private Bus bus;
 
-    private static BusManager ourInstance = new BusManager();
-
-    public static BusManager getInstance() {
-        return ourInstance;
-    }
+    private static Bus instance = null;
 
     private BusManager() {
-        bus = new Bus();
     }
 
-    public void post(BaseEvent event) {
-        bus.post(event);
-    }
+    public static Bus getInstance() {
+        if (instance == null) {
+            instance = new Bus();
+        }
 
-
-    public void register(Context context) {
-        bus.register(context);
-    }
-
-    public void unregister(Context context) {
-        bus.register(context);
+        return instance;
     }
 }
+
