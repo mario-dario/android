@@ -3,17 +3,26 @@ package com.development.dariopal.neura_manager;
 import android.content.Context;
 
 import com.development.dariopal.DarioPalApplication;
+import com.development.dariopal.MainActivity;
 import com.development.dariopal.R;
+import com.neura.sdk.object.AuthenticationRequest;
+import com.neura.sdk.object.Permission;
 import com.neura.standalonesdk.service.NeuraApiClient;
 import com.neura.standalonesdk.util.Builder;
+
+import java.util.ArrayList;
 
 /**
  * Created by rt_okun on 28/07/2016.
  */
 public class NeuraManager {
 
-    Context mContext;
+    private Context mContext;
     private NeuraApiClient mNeuraApiClient;
+    private ArrayList<Permission> mPermissions = new ArrayList<>(Permission.list(new String[]{
+            "userArrivedToGym", "userLeftGym", "userFinishedWorkOut", "userStartedWorkOut"
+    }));
+
     private static NeuraManager ourInstance = new NeuraManager();
 
     public static NeuraManager getInstance() {
@@ -51,11 +60,27 @@ public class NeuraManager {
      * The log collected in {@link NeuraApiClient#enableLogFile(boolean)} will be sent to our
      * servers, in order to track issues your user might be having.
      */
-    public void initNeuraConnection() {
-        Builder builder = new Builder(mContext);
+    public void initNeuraConnection(Context context) {
+        Builder builder = new Builder(context);
         mNeuraApiClient = builder.build();
         mNeuraApiClient.setAppUid(mContext.getResources().getString(R.string.app_uid));
         mNeuraApiClient.setAppSecret(mContext.getResources().getString(R.string.app_secret));
         mNeuraApiClient.connect();
+    }
+
+    public NeuraApiClient getClient() {
+        return mNeuraApiClient;
+    }
+
+    public ArrayList<Permission> getPermissions() {
+        return mPermissions;
+    }
+
+    public void loginToNeura() {
+        //The response for authenticate is received on onActivityResult method in this class
+        AuthenticationRequest authenticationRequest = new AuthenticationRequest();
+        authenticationRequest.setPermissions(NeuraManager.getInstance().getPermissions());
+        NeuraManager.getInstance().getClient().authenticate(Constants.NEURA_AUTHENTICATION_REQUEST_CODE,
+                authenticationRequest);
     }
 }

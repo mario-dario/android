@@ -1,3 +1,4 @@
 <resources>
     <string name="app_name">DarioPal</string>
+    <string name="btn_label_login_neura">Neura Login</string>
 </resources>
