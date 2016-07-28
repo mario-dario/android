@@ -2,4 +2,5 @@
 <resources>
     <string name="app_uid">f40f607b1bd4928c7fd39bd61ce95437df0dd2d0bf310aa4b9bbedd3f2350685</string>
     <string name="app_secret">64a18a1ff9bd062e2fe0d0b903322a39c52f4d4df8d58f38830cdeba4f9b793d</string>
+    <string name="google_api_project_number">374485386450</string>
 </resources>

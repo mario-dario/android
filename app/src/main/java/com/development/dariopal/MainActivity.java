@@ -12,7 +12,11 @@ import android.widget.Button;
 import com.development.dariopal.neura_manager.Constants;
 import com.development.dariopal.neura_manager.NeuraManager;
 import com.neura.sdk.object.AuthenticationRequest;
+import com.neura.sdk.object.Permission;
+import com.neura.sdk.service.SubscriptionRequestCallbacks;
 import com.neura.standalonesdk.util.SDKUtils;
+
+import java.util.ArrayList;
 
 public class MainActivity extends AppCompatActivity implements View.OnClickListener{
 
@@ -54,8 +58,36 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
      */
     @Override
     public void onActivityResult(int requestCode, int resultCode, Intent data) {
+        if (requestCode == Constants.NEURA_AUTHENTICATION_REQUEST_CODE && resultCode == FragmentActivity.RESULT_OK) {
+            ArrayList<Permission> permissions = NeuraManager.getInstance().getPermissions();
+            Log.i(getClass().getSimpleName(), "user successfully authenticated with Neura");
+            NeuraManager.getInstance().getClient().registerPushServerApiKey(this, getString(R.string.google_api_project_number));
+            for (int i = 0; i < permissions.size(); i++) {
+                NeuraManager.getInstance().getClient().subscribeToEvent(permissions.get(i).getName(),
+                        "YourEventIdentifier_" + permissions.get(i).getName(), true,
+                        new SubscriptionRequestCallbacks() {
+                            @Override
+                            public void onSuccess(String eventName, Bundle bundle, String s1) {
+                                Log.i(getClass().getSimpleName(), "Successfully subscribed to event " + eventName);
+                            }
 
+                            @Override
+                            public void onFailure(String eventName, Bundle bundle, int i) {
+                                Log.e(getClass().getSimpleName(), "Failed to subscribe to event " + eventName);
+                            }
+                        });
+            }
+        } else {
+            Log.e(getClass().getSimpleName(), "user failed to authenticate with Neura");
+        }
 
+    }
+
+    @Override
+    protected void onDestroy() {
+        super.onDestroy();
+        if (NeuraManager.getInstance().getClient() != null)
+            NeuraManager.getInstance().getClient().disconnect();
     }
 
 
