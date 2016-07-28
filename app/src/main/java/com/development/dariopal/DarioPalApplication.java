@@ -1,12 +1,14 @@
 package com.development.dariopal;
 
-import android.app.Application;
+
+import com.orm.SugarApp;
 import android.content.Context;
 
-/**
- * Created by rt_okun on 28/07/2016.
- */
-public class DarioPalApplication extends Application {
+
+public class DarioPalApplication  extends SugarApp{
+
+
+
 
     private static Context mContext;
 

@@ -22,17 +22,20 @@
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
 
-                <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
         </activity>
         <receiver
             android:name=".neura_manager.NeuraReceiver"
             android:permission="com.google.android.c2dm.permission.SEND">
             <intent-filter>
-                <action android:name="com.google.android.c2dm.intent.RECEIVE" />
-                <category android:name="com.example.rt_okun.neuratest2" />
             </intent-filter>
         </receiver>
+	
+	   <meta-data android:name="DATABASE" android:value="dariopal.db" />
+        <meta-data android:name="VERSION" android:value="1" />
+        <meta-data android:name="QUERY_LOG" android:value="true" />
+
+
     </application>
 
 </manifest>
