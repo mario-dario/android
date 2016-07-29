@@ -1,11 +1,17 @@
 package com.development.dariopal.notifications;
 
 
+import android.annotation.TargetApi;
 import android.app.Notification;
 import android.app.NotificationManager;
 import android.app.PendingIntent;
+import android.content.ComponentName;
 import android.content.Context;
 import android.content.Intent;
+import android.graphics.BitmapFactory;
+import android.graphics.drawable.BitmapDrawable;
+import android.graphics.drawable.Drawable;
+import android.graphics.drawable.Icon;
 import android.os.Build;
 import android.support.v4.app.NotificationCompat;
 
@@ -25,22 +31,30 @@ public class NotificationWrapper {
     this.context = context;
   }
 
+  @TargetApi(Build.VERSION_CODES.M)
   public void buildNotification() {
 
-//    Intent intent = new Intent(context, Class.forName(DarioGlucoConst.DARIO_LAUNCHER_ACTIVITY));
     nManager = (NotificationManager) context.getSystemService(Context.NOTIFICATION_SERVICE);
 
-//    PendingIntent pendingIntent = PendingIntent.getActivity(context,
-//        NOTIFICATION_ID, intent, PendingIntent.FLAG_UPDATE_CURRENT);
+    Intent intent = new Intent();
+    intent.setComponent(new ComponentName(DarioGlucoConst.DARIO_LAUNCHER_ACTIVITY,"WelcomeActivity.class"));
 
-//    Notification.Action action = new Notification.Action(R.mipmap.ic_launcher, "open", pendingIntent);
+//    Intent intent = context.getPackageManager().getLaunchIntentForPackage(DarioGlucoConst.DARIO_LAUNCHER_ACTIVITY);
+
+    PendingIntent pendingIntent = PendingIntent.getActivity(context,
+        NOTIFICATION_ID, intent, PendingIntent.FLAG_UPDATE_CURRENT);
+    Icon icon;
+    Notification.Action action = new Notification.Action(R.drawable.actionbuttongood, "open", pendingIntent);
     if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.KITKAT_WATCH) {
       builder = new Notification.Builder(context)
-         .setContentTitle("SugarPal")
-         .setContentText("All good! Sugar keeps an eye on you... ")
-//         .setContentIntent(pendingIntent)
-//          .addAction(action)
-         .setSmallIcon(R.mipmap.ic_launcher);
+          .setContentTitle("SugarPal")
+          .setContentText("All good! Sugar keeps an eye on you... ")
+         .setContentIntent(pendingIntent)
+          .addAction(action)
+          .setSmallIcon(R.drawable.pushbigicon)
+          .setLargeIcon(BitmapFactory.decodeResource(context.getResources(), R.drawable.pushbigicon))
+          .setPriority(Notification.PRIORITY_MAX);
+
     }
 
     notification = builder.build();
@@ -52,15 +66,23 @@ public class NotificationWrapper {
 
   public void updateNotification(String title, String body) {
 //    NotificationCompat.Action newAction = new NotificationCompat.Action(R.mipmap.ic_launcher, "done")
+
+    Intent intent = new Intent(context, MainActivity.class);
+
+    PendingIntent pendingIntent = PendingIntent.getActivity(context,
+        NOTIFICATION_ID, intent, PendingIntent.FLAG_UPDATE_CURRENT);
+
+
     builder.setContentTitle(title)
         .setContentText(body);
+
 
     //update icon as well
     // add action of "ok done"
 
     notification = builder.build();
 
-    nManager.notify(NOTIFICATION_ID,notification);
+    nManager.notify(NOTIFICATION_ID, notification);
   }
 
 }
