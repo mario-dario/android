@@ -43,7 +43,7 @@ public class NotificationWrapper {
 
     PendingIntent pendingIntent = PendingIntent.getActivity(context,
         NOTIFICATION_ID, intent, PendingIntent.FLAG_UPDATE_CURRENT);
-    Icon icon;
+
     Notification.Action action = new Notification.Action(R.drawable.actionbuttongood, "open", pendingIntent);
     if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.KITKAT_WATCH) {
       builder = new Notification.Builder(context)
@@ -64,6 +64,7 @@ public class NotificationWrapper {
     nManager.notify(NOTIFICATION_ID, notification);
   }
 
+  @TargetApi(Build.VERSION_CODES.KITKAT_WATCH)
   public void updateNotification(String title, String body) {
 //    NotificationCompat.Action newAction = new NotificationCompat.Action(R.mipmap.ic_launcher, "done")
 
@@ -73,8 +74,12 @@ public class NotificationWrapper {
         NOTIFICATION_ID, intent, PendingIntent.FLAG_UPDATE_CURRENT);
 
 
+    Notification.Action action = new Notification.Action(R.drawable.actionbuttonbad, "test", pendingIntent);
+
     builder.setContentTitle(title)
-        .setContentText(body);
+        .setContentText(body)
+        .addAction(action);
+
 
 
     //update icon as well
