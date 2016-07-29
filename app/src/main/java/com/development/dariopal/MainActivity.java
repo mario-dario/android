@@ -9,6 +9,7 @@ import android.support.v7.app.AppCompatActivity;
 import android.util.Log;
 import android.view.View;
 import android.widget.Button;
+import android.widget.ImageView;
 import android.widget.Toast;
 
 import com.development.dariopal.neura_manager.NeuraEventConstants;
@@ -28,6 +29,9 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
 
     Button btnStartTrackingService;
     Button btnStopTrackingService;
+    ImageView imgMain;
+    ImageView imgBotomRight;
+    ImageView imgBottomLeft;
 
     private Intent darioServiceIntent;
 
@@ -71,6 +75,9 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
     private void bindViews() {
         btnStartTrackingService = (Button)findViewById(R.id.btnStartTrackingService);
         btnStopTrackingService = (Button)findViewById(R.id.btnStopTrackingService);
+        imgMain = (ImageView)findViewById(R.id.main_image);
+        imgBotomRight = (ImageView)findViewById(R.id.right_bottom_image);
+        imgBottomLeft = (ImageView)findViewById(R.id.left_bottom_image);
     }
 
     private void updateVisibility() {
@@ -82,11 +89,13 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
     }
 
     private void showStartScreen() {
+        imgMain.setImageResource(R.drawable.off);
         btnStartTrackingService.setVisibility(View.VISIBLE);
         btnStopTrackingService.setVisibility(View.INVISIBLE);
     }
 
     private void showStopScreen() {
+        imgMain.setImageResource(R.drawable.on);
         btnStartTrackingService.setVisibility(View.INVISIBLE);
         btnStopTrackingService.setVisibility(View.VISIBLE);
     }

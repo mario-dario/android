@@ -9,11 +9,20 @@
     android:paddingTop="@dimen/activity_vertical_margin"
     tools:context="com.development.dariopal.MainActivity">
 
+    <ImageView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:id="@+id/main_image"
+        android:layout_centerHorizontal="true"
+        android:layout_marginBottom="20dp"
+        android:layout_above="@+id/btnStartTrackingService"/>
+
     <Button
         android:id="@+id/btnStartTrackingService"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_centerInParent="true"
+        android:textColor="@android:color/white"
         android:background="@drawable/follow_me_btn_blue"
         android:text="@string/btn_label_start_tracking"
         android:visibility="invisible" />
@@ -23,8 +32,29 @@
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_centerInParent="true"
+        android:textColor="@android:color/white"
         android:background="@drawable/follow_me_btn_orange"
         android:text="@string/btn_label_stop_tracking"
         android:visibility="invisible" />
+
+    <ImageView
+        android:layout_width="wrap_content"
+        android:src="@drawable/neorologo"
+        android:layout_height="wrap_content"
+        android:id="@+id/left_bottom_image"
+        android:layout_marginBottom="20dp"
+        android:layout_alignParentBottom="true"
+        android:layout_alignParentStart="true"
+        android:layout_above="@+id/btnStartTrackingService"/>
+
+    <ImageView
+        android:layout_width="wrap_content"
+        android:src="@drawable/dariologo"
+        android:layout_height="wrap_content"
+        android:id="@+id/right_bottom_image"
+        android:layout_marginBottom="20dp"
+        android:layout_alignParentBottom="true"
+        android:layout_alignParentEnd="true"
+        android:layout_above="@+id/btnStartTrackingService"/>
 
 </RelativeLayout>
