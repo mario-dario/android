@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
-    <string name="app_uid">f40f607b1bd4928c7fd39bd61ce95437df0dd2d0bf310aa4b9bbedd3f2350685</string>
-    <string name="app_secret">64a18a1ff9bd062e2fe0d0b903322a39c52f4d4df8d58f38830cdeba4f9b793d</string>
+    <string name="app_uid">b5bdb9cde82f6f17f92ef90a92b8c22e6e9a187dd6b9312eff81def683a63ee9</string>
+    <string name="app_secret">6cd6492fad31b2365fb14cb7122d0bae4ba41a1a671071fd1dd3bee57065a724</string>
     <string name="google_api_project_number">374485386450</string>
 </resources>
