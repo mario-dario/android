@@ -22,7 +22,7 @@ public class NeuraManager {
     private Context mContext;
     private NeuraApiClient mNeuraApiClient;
     private ArrayList<Permission> mPermissions = new ArrayList<>(Permission.list(new String[]{
-            "USER_ARRIVED_TO_GYM", "USER_LEFT_THE_GYM", "USER_FINISHED_WORKOUT", "USER_STARTED_WORKOUT"
+            "userLeftGym", "userArrivedToGym", "userStartedWorkOut", "userFinishedWorkOut"
     }));
 
 
