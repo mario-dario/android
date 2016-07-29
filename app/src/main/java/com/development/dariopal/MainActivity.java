@@ -1,5 +1,7 @@
 package com.development.dariopal;
 
+import android.app.ActivityManager;
+import android.content.Context;
 import android.content.Intent;
 import android.os.Bundle;
 import android.support.v4.app.FragmentActivity;
@@ -9,14 +11,16 @@ import android.view.View;
 import android.widget.Button;
 import android.widget.Toast;
 
-import com.development.dariopal.neura_manager.Constants;
+import com.development.dariopal.neura_manager.NeuraEventConstants;
 import com.development.dariopal.neura_manager.NeuraManager;
 import com.development.dariopal.otto.BusManager;
 import com.development.dariopal.service.DarioPalService;
+import com.neura.sdk.config.NeuraConsts;
 import com.neura.sdk.object.Permission;
 import com.neura.sdk.service.SubscriptionRequestCallbacks;
 
 import java.util.ArrayList;
+import java.util.List;
 
 import butterknife.BindView;
 import butterknife.ButterKnife;
@@ -65,7 +69,7 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
     }
 
     private void updateVisibility() {
-        if (DarioPalService.isInstanceCreated(this)){
+        if (isServiceRunning()) {
             showStopScreen();
         } else {
             showStartScreen();
@@ -109,8 +113,7 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
 //    }
 
 
-
-    @OnClick ({R.id.btnStartTrackingService, R.id.btnStopTrackingService})
+    @OnClick({R.id.btnStartTrackingService, R.id.btnStopTrackingService})
     public void onClick(View v) {
         switch (v.getId()) {
             case R.id.btnStartTrackingService:
@@ -129,7 +132,7 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
     }
 
     private void manageStartTrackButton() {
-        if (!NeuraManager.getInstance().isConnected()){
+        if (!NeuraManager.getInstance().isConnected()) {
             NeuraManager.getInstance().loginToNeura();
         } else {
             startService();
@@ -137,15 +140,15 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
         }
     }
 
-    public void startService(){
-        if (!DarioPalService.isInstanceCreated(this)){
+    public void startService() {
+        if (!isServiceRunning()) {
             darioServiceIntent = new Intent(getApplicationContext(), DarioPalService.class);
             this.startService(darioServiceIntent);
         }
     }
 
-    public void stopService(){
-        if (DarioPalService.isInstanceCreated(this)){
+    public void stopService() {
+        if (isServiceRunning()) {
             this.stopService(darioServiceIntent);
         }
     }
@@ -160,7 +163,7 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
      */
     @Override
     public void onActivityResult(int requestCode, int resultCode, Intent data) {
-        if (requestCode == Constants.NEURA_AUTHENTICATION_REQUEST_CODE && resultCode == FragmentActivity.RESULT_OK) {
+        if (requestCode == NeuraEventConstants.NEURA_AUTHENTICATION_REQUEST_CODE && resultCode == FragmentActivity.RESULT_OK) {
             ArrayList<Permission> permissions = NeuraManager.getInstance().getPermissions();
             Log.i(getClass().getSimpleName(), "user successfully authenticated with Neura");
             NeuraManager.getInstance().getClient().registerPushServerApiKey(this, getString(R.string.google_api_project_number));
@@ -192,6 +195,19 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
         if (NeuraManager.getInstance().getClient() != null)
             NeuraManager.getInstance().getClient().disconnect();
         super.onDestroy();
+    }
+
+    public boolean isServiceRunning() {
+
+        ActivityManager activityManager = (ActivityManager) this.getSystemService(Context.ACTIVITY_SERVICE);
+        final List<ActivityManager.RunningServiceInfo> services = activityManager.getRunningServices(Integer.MAX_VALUE);
+
+        for (ActivityManager.RunningServiceInfo runningServiceInfo : services) {
+            if (runningServiceInfo.service.getClassName().equals(DarioPalService.class.getSimpleName())) {
+                return true;
+            }
+        }
+        return false;
     }
 
 

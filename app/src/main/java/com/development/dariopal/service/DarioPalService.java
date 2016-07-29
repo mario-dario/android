@@ -169,18 +169,6 @@ public class DarioPalService extends Service
 
     }
 
-    public static boolean isInstanceCreated(Context context) {
-
-            final ActivityManager activityManager = (ActivityManager) context.getSystemService(Context.ACTIVITY_SERVICE);
-            final List<ActivityManager.RunningServiceInfo> services = activityManager.getRunningServices(Integer.MAX_VALUE);
-
-            for (ActivityManager.RunningServiceInfo runningServiceInfo : services) {
-                if (runningServiceInfo.service.getClassName().equals(TAG)){
-                    return true;
-                }
-            }
-            return false;
-        }
 
 }
 
