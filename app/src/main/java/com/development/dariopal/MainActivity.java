@@ -87,6 +87,7 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
                 break;
             case Const.NEURA_PUSH_EVENT: {
                 Toast.makeText(MainActivity.this, "Push received", Toast.LENGTH_SHORT).show();
+
                 break;
             }
 
