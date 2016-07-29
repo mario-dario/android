@@ -6,6 +6,8 @@ import android.app.NotificationManager;
 import android.app.PendingIntent;
 import android.content.Context;
 import android.content.Intent;
+import android.os.Build;
+import android.support.v4.app.NotificationCompat;
 
 import com.development.dariopal.DarioGlucoConst;
 import com.development.dariopal.MainActivity;
@@ -31,11 +33,15 @@ public class NotificationWrapper {
     PendingIntent pendingIntent = PendingIntent.getActivity(context,
         NOTIFICATION_ID, intent, PendingIntent.FLAG_UPDATE_CURRENT);
 
-     builder = new Notification.Builder(context)
-        .setContentTitle("SugarPal")
-        .setContentText("All good! Sugar keeps an eye on you... ")
-        .setContentIntent(pendingIntent)
-        .setSmallIcon(R.mipmap.ic_launcher);
+    Notification.Action action = new Notification.Action(R.mipmap.ic_launcher, "open", pendingIntent);
+    if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.KITKAT_WATCH) {
+      builder = new Notification.Builder(context)
+         .setContentTitle("SugarPal")
+         .setContentText("All good! Sugar keeps an eye on you... ")
+         .setContentIntent(pendingIntent)
+          .addAction(action)
+         .setSmallIcon(R.mipmap.ic_launcher);
+    }
 
     notification = builder.build();
 
@@ -45,6 +51,7 @@ public class NotificationWrapper {
   }
 
   public void updateNotification(String title, String body) {
+//    NotificationCompat.Action newAction = new NotificationCompat.Action(R.mipmap.ic_launcher, "done")
     builder.setContentTitle(title)
         .setContentText(body);
 
