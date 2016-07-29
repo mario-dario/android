@@ -12,6 +12,10 @@ import android.widget.Toast;
 
 import com.development.dariopal.MainActivity;
 import com.development.dariopal.R;
+import com.development.dariopal.otto.BusManager;
+import com.development.dariopal.otto.Const;
+import com.development.dariopal.otto.events.BaseEvent;
+import com.squareup.otto.Subscribe;
 
 
 public class DarioPalService extends Service
@@ -33,28 +37,34 @@ public class DarioPalService extends Service
      */
     public class LocalBinder extends Binder
     {
-        DarioPalService getService() {
+        DarioPalService getService()
+        {
             return DarioPalService.this;
         }
     }
 
     @Override
-    public void onCreate() {
-        mNM = (NotificationManager)getSystemService(NOTIFICATION_SERVICE);
+    public void onCreate()
+    {
+        BusManager.getInstance().register(this);
+        mNM = (NotificationManager) getSystemService(NOTIFICATION_SERVICE);
 
         // Display a notification about us starting.  We put an icon in the status bar.
         showNotification();
     }
 
     @Override
-    public int onStartCommand(Intent intent, int flags, int startId) {
+    public int onStartCommand(Intent intent, int flags, int startId)
+    {
         Log.i("LocalService", "Received start id " + startId + ": " + intent);
         return START_NOT_STICKY;
     }
 
     @Override
-    public void onDestroy() {
+    public void onDestroy()
+    {
         // Cancel the persistent notification.
+        BusManager.getInstance().unregister(this);
         mNM.cancel(NOTIFICATION);
 
         // Tell the user we stopped.
@@ -62,7 +72,8 @@ public class DarioPalService extends Service
     }
 
     @Override
-    public IBinder onBind(Intent intent) {
+    public IBinder onBind(Intent intent)
+    {
         return mBinder;
     }
 
@@ -73,9 +84,10 @@ public class DarioPalService extends Service
     /**
      * Show a notification while this service is running.
      */
-    private void showNotification() {
+    private void showNotification()
+    {
         // In this sample, we'll use the same text for the ticker and the expanded notification
-        CharSequence text =  "local_service_started";
+        CharSequence text = "local_service_started";
 
         // The PendingIntent to launch our activity if the user selects this notification
         PendingIntent contentIntent = PendingIntent.getActivity(this, 0,
@@ -95,4 +107,24 @@ public class DarioPalService extends Service
         mNM.notify(NOTIFICATION, notification);
     }
 
+    @Subscribe
+    public void pushArrived(BaseEvent baseEvent)
+    {
+        switch ( baseEvent.getEventType() )
+        {
+            case Const.DB_EVENT:
+                Toast.makeText(this, "DB_EVENT arrived", Toast.LENGTH_SHORT).show();
+                break;
+            case Const.NEURA_PUSH_EVENT:
+                Toast.makeText(this, "NEURA_PUSH_EVENT arrived", Toast.LENGTH_SHORT).show();
+                break;
+            case Const.DARIO_EVENT:
+                Toast.makeText(this, "DARIO_EVENT arrived", Toast.LENGTH_SHORT).show();
+                break;
+        }
+
+
+    }
 }
+
+

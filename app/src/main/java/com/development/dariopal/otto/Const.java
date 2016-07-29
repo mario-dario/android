@@ -6,4 +6,7 @@ package com.development.dariopal.otto;
 public class Const {
     public static final int NEURA_PUSH_EVENT = 0;
     public static final int DB_EVENT = 1;
+    public static final int DARIO_EVENT = 2;
+
+
 }
