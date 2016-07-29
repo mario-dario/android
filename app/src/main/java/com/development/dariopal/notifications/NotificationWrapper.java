@@ -16,7 +16,7 @@ import com.development.dariopal.R;
 public class NotificationWrapper {
 
   private Context context;
-  private int NOTIFICATION_ID = 1234;
+  public static int NOTIFICATION_ID = 1234;
   Notification.Builder builder;
   Notification notification;
   NotificationManager nManager;

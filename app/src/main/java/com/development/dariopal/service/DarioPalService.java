@@ -78,11 +78,15 @@ public class DarioPalService extends Service {
         // Cancel the persistent notification.
         BusManager.getInstance().unregister(this);
         mNM.cancel(NOTIFICATION);
-
+        removeNotification();
         DarioDataReceiver.getDarioDataReceiver().stop();
 
-        // Tell the user we stopped.
-        Toast.makeText(this, "local_service_stopped", Toast.LENGTH_SHORT).show();
+    }
+
+    private void removeNotification() {
+        if (mNM != null){
+            mNM.cancel(NotificationWrapper.NOTIFICATION_ID);
+        }
     }
 
     @Override
@@ -113,7 +117,7 @@ public class DarioPalService extends Service {
                 .build();
 
         // Send the notification.
-        mNM.notify(NOTIFICATION, notification);
+//        mNM.notify(NOTIFICATION, notification);
     }
 
     @Subscribe
