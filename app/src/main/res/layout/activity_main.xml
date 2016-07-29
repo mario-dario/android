@@ -9,6 +9,17 @@
     android:paddingTop="@dimen/activity_vertical_margin"
     tools:context="com.development.dariopal.MainActivity">
 
+
+    <Button
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:id="@+id/start_tracking_btn"
+        android:background="@drawable/btn_start_tracking_shape_green"
+        android:text="Start Tracking"
+        android:textColor="#ffffff"
+        android:textAllCaps="false"
+        android:layout_centerInParent="true"/>
+
     <Button
         android:layout_alignParentBottom="true"
         android:layout_width="match_parent"

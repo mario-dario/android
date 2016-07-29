@@ -28,12 +28,11 @@ repositories {
 
 dependencies {
     compile fileTree(dir: 'libs', include: ['*.jar'])
-    compile(name: 'dariosharedclasses-debug', ext: 'aar')
     testCompile 'junit:junit:4.12'
     compile 'com.android.support:appcompat-v7:23.4.0'
     compile 'com.android.support:design:23.4.0'
     compile 'org.apache.httpcomponents:httpclient:4.5.1'
- compile 'com.github.satyan:sugar:1.4'
+    compile 'com.github.satyan:sugar:1.4'
     compile 'com.google.android.gms:play-services-analytics:9.0.2'
     compile 'com.google.android.gms:play-services-gcm:9.0.2'
     compile 'com.google.android.gms:play-services-location:9.0.2'

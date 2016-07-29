@@ -11,6 +11,9 @@ import android.view.View;
 import android.widget.Button;
 import android.widget.Toast;
 
+import com.development.dariopal.dario.DarioDataReceiver;
+import com.development.dariopal.dario.ExportDarioLogEntryDataSerializable;
+import com.development.dariopal.dario.IDarioDataHandler;
 import com.development.dariopal.database.DBManager;
 import com.development.dariopal.database.DBManagerInterface;
 import com.development.dariopal.database.EventRecord;
@@ -19,9 +22,6 @@ import com.development.dariopal.neura_manager.NeuraManager;
 import com.development.dariopal.otto.BusManager;
 import com.development.dariopal.otto.Const;
 import com.development.dariopal.otto.events.BaseEvent;
-import com.labstyle.darioandroid.dariosharedclasses.DarioDataReceiver;
-import com.labstyle.darioandroid.dariosharedclasses.ExportDarioLogEntryDataSerializable;
-import com.labstyle.darioandroid.dariosharedclasses.IDarioDataHandler;
 import com.neura.sdk.object.Permission;
 import com.neura.sdk.service.SubscriptionRequestCallbacks;
 import com.squareup.otto.Subscribe;
@@ -50,21 +50,22 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
             public void onSuccess(ExportDarioLogEntryDataSerializable exportDarioLogEntryDataSerializable) {
                 dbManagerInterface.onSaveToDB(exportDarioLogEntryDataSerializable);
                 originTime = exportDarioLogEntryDataSerializable.getTimeOfEvent();
+                Handler handler = new Handler();
+                handler.postDelayed(new Runnable() {
+                    @Override
+                    public void run() {
+                        if (dbManagerInterface != null){
+                            List<EventRecord> events =   dbManagerInterface.onGetFromDB(originTime, originTime);
+                            for (EventRecord eventRecord: events){
+                                Toast.makeText(MainActivity.this, eventRecord.getType(), Toast.LENGTH_SHORT).show();
+                            }
+                        }
+                    }
+                }, 2000);
             }
         });
 
-        Handler handler = new Handler();
-        handler.postDelayed(new Runnable() {
-            @Override
-            public void run() {
-                if (dbManagerInterface != null){
-                    List<EventRecord> events =   dbManagerInterface.onGetFromDB(originTime, originTime);
-                    for (EventRecord eventRecord: events){
-                        Toast.makeText(MainActivity.this, eventRecord.getType(), Toast.LENGTH_SHORT).show();
-                    }
-                }
-            }
-        }, 2000);
+
     }
 
     @Override
