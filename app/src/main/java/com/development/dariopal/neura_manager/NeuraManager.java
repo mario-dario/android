@@ -87,17 +87,23 @@ public class NeuraManager {
                 authenticationRequest);
     }
 
-    public void logoutFromNeura(){
+    public void logoutFromNeura(final NeuraManagerCallbacks callbacks){
         mNeuraApiClient.forgetMe(true, new android.os.Handler.Callback() {
             @Override
             public boolean handleMessage(Message msg) {
-                Toast.makeText(mContext, "Good Bye", Toast.LENGTH_SHORT).show();
+                callbacks.onLogoutSuccess(true);
                 return true;
             }
         });
     }
 
+
+
     public boolean isConnected() {
         return SDKUtils.isConnected(mContext, getClient());
+    }
+
+    public interface NeuraManagerCallbacks{
+        void onLogoutSuccess(boolean isSuccess);
     }
 }

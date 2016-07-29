@@ -22,17 +22,11 @@ import com.neura.sdk.service.SubscriptionRequestCallbacks;
 import java.util.ArrayList;
 import java.util.List;
 
-import butterknife.BindView;
-import butterknife.ButterKnife;
-import butterknife.OnClick;
 
 public class MainActivity extends AppCompatActivity implements View.OnClickListener {
 
 
-    @BindView(R.id.btnStartTrackingService)
     Button btnStartTrackingService;
-
-    @BindView(R.id.btnStopTrackingService)
     Button btnStopTrackingService;
 
     private Intent darioServiceIntent;
@@ -42,7 +36,8 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
-        ButterKnife.bind(this);
+        bindViews();
+        setListeners();
         NeuraManager.getInstance().initNeuraConnection(this);
         updateVisibility();
 //        dbManagerInterface = new DBManager(this);
@@ -66,6 +61,16 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
 //                }
 //            }
 //        }, 2000);
+    }
+
+    private void setListeners() {
+        btnStartTrackingService.setOnClickListener(this);
+        btnStopTrackingService.setOnClickListener(this);
+    }
+
+    private void bindViews() {
+        btnStartTrackingService = (Button)findViewById(R.id.btnStartTrackingService);
+        btnStopTrackingService = (Button)findViewById(R.id.btnStopTrackingService);
     }
 
     private void updateVisibility() {
@@ -113,7 +118,6 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
 //    }
 
 
-    @OnClick({R.id.btnStartTrackingService, R.id.btnStopTrackingService})
     public void onClick(View v) {
         switch (v.getId()) {
             case R.id.btnStartTrackingService:
@@ -127,8 +131,12 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
 
     private void manageStopButton() {
         stopService();
-        NeuraManager.getInstance().logoutFromNeura();
-        updateVisibility();
+        NeuraManager.getInstance().logoutFromNeura(new NeuraManager.NeuraManagerCallbacks() {
+            @Override
+            public void onLogoutSuccess(boolean isSuccess) {
+                updateVisibility();
+            }
+        });
     }
 
     private void manageStartTrackButton() {
@@ -149,6 +157,9 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
 
     public void stopService() {
         if (isServiceRunning()) {
+            if (darioServiceIntent == null){
+                darioServiceIntent = new Intent(getApplicationContext(), DarioPalService.class);
+            }
             this.stopService(darioServiceIntent);
         }
     }
@@ -203,7 +214,9 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
         final List<ActivityManager.RunningServiceInfo> services = activityManager.getRunningServices(Integer.MAX_VALUE);
 
         for (ActivityManager.RunningServiceInfo runningServiceInfo : services) {
-            if (runningServiceInfo.service.getClassName().equals(DarioPalService.class.getSimpleName())) {
+            Log.d("Check Running Services", runningServiceInfo.service.getClassName());
+            if (runningServiceInfo.service.getClassName().equals(DarioPalService.class.getName())) {
+                Log.d("Check Running Services", runningServiceInfo.getClass().getSimpleName());
                 return true;
             }
         }
