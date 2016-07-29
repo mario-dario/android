@@ -7,7 +7,7 @@ import com.neura.standalonesdk.events.NeuraEvent;
  */
 public class NeuraPushEvent extends BaseEvent {
 
-    NeuraEvent neuraEvent;
+    public NeuraEvent neuraEvent;
 
     public NeuraPushEvent(int eventType, NeuraEvent neuraEvent) {
         super(eventType);

@@ -8,10 +8,10 @@ import com.development.dariopal.dario.ExportDarioLogEntryDataSerializable;
 
 public class DarioPushEvent extends BaseEvent
 {
-    ExportDarioLogEntryDataSerializable darioEvent;
+    public ExportDarioLogEntryDataSerializable darioEvent;
 
-    public DarioPushEvent(int eventType, ExportDarioLogEntryDataSerializable neuraEvent) {
+    public DarioPushEvent(int eventType, ExportDarioLogEntryDataSerializable darioEvent) {
         super(eventType);
-        this.darioEvent = neuraEvent;
+        this.darioEvent = darioEvent;
     }
 }

@@ -12,14 +12,25 @@ import android.widget.Toast;
 
 import com.development.dariopal.MainActivity;
 import com.development.dariopal.R;
+import com.development.dariopal.dario.DarioDataReceiver;
+import com.development.dariopal.dario.ExportDarioLogEntryDataSerializable;
+import com.development.dariopal.dario.IDarioDataHandler;
+import com.development.dariopal.database.DBManager;
 import com.development.dariopal.otto.BusManager;
 import com.development.dariopal.otto.Const;
 import com.development.dariopal.otto.events.BaseEvent;
+import com.development.dariopal.otto.events.DarioPushEvent;
+import com.development.dariopal.otto.events.NeuraPushEvent;
 import com.squareup.otto.Subscribe;
 
 
 public class DarioPalService extends Service
 {
+    private DBManager dbManagerInterface;
+
+
+    private static DarioPalService instance = null;
+
     public DarioPalService()
     {
     }
@@ -46,11 +57,22 @@ public class DarioPalService extends Service
     @Override
     public void onCreate()
     {
+        instance=this;
         BusManager.getInstance().register(this);
         mNM = (NotificationManager) getSystemService(NOTIFICATION_SERVICE);
 
         // Display a notification about us starting.  We put an icon in the status bar.
         showNotification();
+
+        dbManagerInterface = new DBManager(this);
+        DarioDataReceiver.getDarioDataReceiver().start(this, new IDarioDataHandler() {
+            @Override
+            public void onSuccess(ExportDarioLogEntryDataSerializable exportDarioLogEntryDataSerializable) {
+                BusManager.getInstance().post(new DarioPushEvent(Const.DARIO_EVENT, exportDarioLogEntryDataSerializable));
+                dbManagerInterface.onSaveToDB(exportDarioLogEntryDataSerializable);
+
+            }
+        });
     }
 
     @Override
@@ -63,9 +85,12 @@ public class DarioPalService extends Service
     @Override
     public void onDestroy()
     {
+        instance=null;
         // Cancel the persistent notification.
         BusManager.getInstance().unregister(this);
         mNM.cancel(NOTIFICATION);
+
+        DarioDataReceiver.getDarioDataReceiver().stop();
 
         // Tell the user we stopped.
         Toast.makeText(this, "local_service_stopped", Toast.LENGTH_SHORT).show();
@@ -97,6 +122,7 @@ public class DarioPalService extends Service
         Notification notification = new Notification.Builder(this)
                 .setSmallIcon(R.drawable.neura_sdk_notification_status_icon)  // the status icon
                 .setTicker(text)  // the status text
+                .setAutoCancel(false)
                 .setWhen(System.currentTimeMillis())  // the time stamp
                 .setContentTitle("DarioPal")  // the label of the entry
                 .setContentText(text)  // the contents of the entry
@@ -116,14 +142,20 @@ public class DarioPalService extends Service
                 Toast.makeText(this, "DB_EVENT arrived", Toast.LENGTH_SHORT).show();
                 break;
             case Const.NEURA_PUSH_EVENT:
+                dbManagerInterface.onSaveToDB(((NeuraPushEvent)baseEvent).neuraEvent.getEventName());
                 Toast.makeText(this, "NEURA_PUSH_EVENT arrived", Toast.LENGTH_SHORT).show();
                 break;
             case Const.DARIO_EVENT:
+                dbManagerInterface.onSaveToDB(((DarioPushEvent)baseEvent).darioEvent);
                 Toast.makeText(this, "DARIO_EVENT arrived", Toast.LENGTH_SHORT).show();
                 break;
         }
 
 
+    }
+
+    public static boolean isInstanceCreated() {
+        return instance != null;
     }
 }
 
