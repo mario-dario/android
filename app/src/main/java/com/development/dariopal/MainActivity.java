@@ -2,32 +2,26 @@ package com.development.dariopal;
 
 import android.content.Context;
 import android.content.Intent;
-import android.os.Handler;
+import android.os.Bundle;
 import android.support.v4.app.FragmentActivity;
 import android.support.v7.app.AppCompatActivity;
-import android.os.Bundle;
 import android.util.Log;
 import android.view.View;
 import android.widget.Button;
 import android.widget.Toast;
 
-import com.development.dariopal.database.DBManager;
 import com.development.dariopal.database.DBManagerInterface;
-import com.development.dariopal.database.EventRecord;
 import com.development.dariopal.neura_manager.Constants;
 import com.development.dariopal.neura_manager.NeuraManager;
 import com.development.dariopal.otto.BusManager;
 import com.development.dariopal.otto.Const;
 import com.development.dariopal.otto.events.BaseEvent;
-import com.labstyle.darioandroid.dariosharedclasses.DarioDataReceiver;
-import com.labstyle.darioandroid.dariosharedclasses.ExportDarioLogEntryDataSerializable;
-import com.labstyle.darioandroid.dariosharedclasses.IDarioDataHandler;
+import com.development.dariopal.service.DarioPalService;
 import com.neura.sdk.object.Permission;
 import com.neura.sdk.service.SubscriptionRequestCallbacks;
 import com.squareup.otto.Subscribe;
 
 import java.util.ArrayList;
-import java.util.List;
 
 public class MainActivity extends AppCompatActivity implements View.OnClickListener{
 
@@ -35,43 +29,51 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
     Long originTime;
     Context context;
     Button btnLoginNeura;
+    Intent darioServiceIntent ;
     private DBManagerInterface dbManagerInterface;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+
+        darioServiceIntent = new Intent(getApplicationContext(), DarioPalService.class);
+
         setContentView(R.layout.activity_main);
         findViews();
         setListeners();
         context = this;
         NeuraManager.getInstance().initNeuraConnection(this);
-        dbManagerInterface = new DBManager(this);
-        DarioDataReceiver.getDarioDataReceiver().start(this, new IDarioDataHandler() {
-            @Override
-            public void onSuccess(ExportDarioLogEntryDataSerializable exportDarioLogEntryDataSerializable) {
-                dbManagerInterface.onSaveToDB(exportDarioLogEntryDataSerializable);
-                originTime = exportDarioLogEntryDataSerializable.getTimeOfEvent();
-            }
-        });
-
-        Handler handler = new Handler();
-        handler.postDelayed(new Runnable() {
-            @Override
-            public void run() {
-                if (dbManagerInterface != null){
-                    List<EventRecord> events =   dbManagerInterface.onGetFromDB(originTime, originTime);
-                    for (EventRecord eventRecord: events){
-                        Toast.makeText(MainActivity.this, eventRecord.getType(), Toast.LENGTH_SHORT).show();
-                    }
-                }
-            }
-        }, 2000);
+        context.startService(darioServiceIntent);
+//        dbManagerInterface = new DBManager(this);
+//        DarioDataReceiver.getDarioDataReceiver().start(this, new IDarioDataHandler() {
+//            @Override
+//            public void onSuccess(ExportDarioLogEntryDataSerializable exportDarioLogEntryDataSerializable) {
+//                dbManagerInterface.onSaveToDB(exportDarioLogEntryDataSerializable);
+//                originTime = exportDarioLogEntryDataSerializable.getTimeOfEvent();
+//            }
+//        });
+//
+//        Handler handler = new Handler();
+//        handler.postDelayed(new Runnable() {
+//            @Override
+//            public void run() {
+//                if (dbManagerInterface != null){
+//                    List<EventRecord> events =   dbManagerInterface.onGetFromDB(originTime, originTime);
+//                    for (EventRecord eventRecord: events){
+//                        Toast.makeText(MainActivity.this, eventRecord.getType(), Toast.LENGTH_SHORT).show();
+//                    }
+//                }
+//            }
+//        }, 2000);
     }
 
     @Override
     protected void onResume() {
-        super.onResume();
-        BusManager.getInstance().register(this);
+           super.onResume();
+           BusManager.getInstance().register(this);
+
+
     }
+
 
 
     @Override
@@ -151,6 +153,8 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
         super.onDestroy();
         if (NeuraManager.getInstance().getClient() != null)
             NeuraManager.getInstance().getClient().disconnect();
+
+        context.stopService(darioServiceIntent);
     }
 
 
