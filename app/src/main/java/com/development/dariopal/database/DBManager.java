@@ -49,7 +49,7 @@ public class DBManager implements DBManagerInterface {
   @Override
   public List<EventRecord> onGetFromDB(Long startTime, Long endTime) {
     List<EventRecord> resultRecords = EventRecord.find(EventRecord.class,
-        "timeStamp <= ? and timeStamp >= ?", endTime.toString(), startTime.toString());
+        "time_stamp <= ? and time_stamp >= ?", endTime.toString(), startTime.toString());
     return resultRecords;
   }
 
