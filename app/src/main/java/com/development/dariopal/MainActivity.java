@@ -8,18 +8,14 @@ import android.support.v7.app.AppCompatActivity;
 import android.util.Log;
 import android.view.View;
 import android.widget.Button;
-import android.widget.Toast;
 
 import com.development.dariopal.database.DBManagerInterface;
 import com.development.dariopal.neura_manager.Constants;
 import com.development.dariopal.neura_manager.NeuraManager;
 import com.development.dariopal.otto.BusManager;
-import com.development.dariopal.otto.Const;
-import com.development.dariopal.otto.events.BaseEvent;
 import com.development.dariopal.service.DarioPalService;
 import com.neura.sdk.object.Permission;
 import com.neura.sdk.service.SubscriptionRequestCallbacks;
-import com.squareup.otto.Subscribe;
 
 import java.util.ArrayList;
 
@@ -82,20 +78,19 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
         super.onPause();
     }
 
-    @Subscribe
-    public void pushArrived(BaseEvent baseEvent){
-        switch (baseEvent.getEventType()){
-            case Const.DB_EVENT:
-                break;
-            case Const.NEURA_PUSH_EVENT: {
-                Toast.makeText(MainActivity.this, "Push received", Toast.LENGTH_SHORT).show();
-
-                break;
-            }
-
-
-        }
-    }
+//    @Subscribe
+//    public void pushArrived(BaseEvent baseEvent){
+//        switch (baseEvent.getEventType()){
+//            case Const.DB_EVENT:
+//                break;
+//            case Const.NEURA_PUSH_EVENT: {
+//                Toast.makeText(MainActivity.this, "Push received", Toast.LENGTH_SHORT).show();
+//                break;
+//            }
+//
+//
+//        }
+//    }
 
     private void setListeners() {
         btnLoginNeura.setOnClickListener(this);
