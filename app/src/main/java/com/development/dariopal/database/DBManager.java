@@ -8,7 +8,7 @@ package com.development.dariopal.database;
 
 import android.content.Context;
 
-import com.labstyle.darioandroid.dariosharedclasses.ExportDarioLogEntryDataSerializable;
+import com.development.dariopal.dario.ExportDarioLogEntryDataSerializable;
 
 import java.util.List;
 
