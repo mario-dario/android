@@ -3,7 +3,6 @@ package com.development.dariopal.neura_manager;
 import android.content.Context;
 
 import com.development.dariopal.DarioPalApplication;
-import com.development.dariopal.MainActivity;
 import com.development.dariopal.R;
 import com.neura.sdk.object.AuthenticationRequest;
 import com.neura.sdk.object.Permission;
@@ -20,8 +19,9 @@ public class NeuraManager {
     private Context mContext;
     private NeuraApiClient mNeuraApiClient;
     private ArrayList<Permission> mPermissions = new ArrayList<>(Permission.list(new String[]{
-            "userArrivedToGym", "userLeftGym", "userFinishedWorkOut", "userStartedWorkOut"
+            "USER_ARRIVED_TO_GYM", "USER_LEFT_THE_GYM", "USER_FINISHED_WORKOUT", "USER_STARTED_WORKOUT"
     }));
+
 
     private static NeuraManager ourInstance = new NeuraManager();
 
@@ -80,7 +80,7 @@ public class NeuraManager {
         //The response for authenticate is received on onActivityResult method in this class
         AuthenticationRequest authenticationRequest = new AuthenticationRequest();
         authenticationRequest.setPermissions(NeuraManager.getInstance().getPermissions());
-        NeuraManager.getInstance().getClient().authenticate(Constants.NEURA_AUTHENTICATION_REQUEST_CODE,
+        NeuraManager.getInstance().getClient().authenticate(NeuraEventConstants.NEURA_AUTHENTICATION_REQUEST_CODE,
                 authenticationRequest);
     }
 }

@@ -16,6 +16,7 @@ import com.development.dariopal.dario.DarioDataReceiver;
 import com.development.dariopal.dario.ExportDarioLogEntryDataSerializable;
 import com.development.dariopal.dario.IDarioDataHandler;
 import com.development.dariopal.database.DBManager;
+import com.development.dariopal.notifications.NotificationWrapper;
 import com.development.dariopal.otto.BusManager;
 import com.development.dariopal.otto.Const;
 import com.development.dariopal.otto.events.BaseEvent;
@@ -30,6 +31,8 @@ public class DarioPalService extends Service
 
 
     private static DarioPalService instance = null;
+    private businessLogicManager mBusinessLogicManager;
+    private NotificationWrapper notificationManager;
 
     public DarioPalService()
     {
@@ -73,6 +76,9 @@ public class DarioPalService extends Service
 
             }
         });
+
+        notificationManager = new  NotificationWrapper(this.getApplicationContext());
+        mBusinessLogicManager = new businessLogicManager(this,dbManagerInterface,notificationManager);
     }
 
     @Override
@@ -143,10 +149,12 @@ public class DarioPalService extends Service
                 break;
             case Const.NEURA_PUSH_EVENT:
                 dbManagerInterface.onSaveToDB(((NeuraPushEvent)baseEvent).neuraEvent.getEventName());
+                mBusinessLogicManager.onNewNeuraEvent(((NeuraPushEvent)baseEvent).neuraEvent);
                 Toast.makeText(this, "NEURA_PUSH_EVENT arrived", Toast.LENGTH_SHORT).show();
                 break;
             case Const.DARIO_EVENT:
                 dbManagerInterface.onSaveToDB(((DarioPushEvent)baseEvent).darioEvent);
+
                 Toast.makeText(this, "DARIO_EVENT arrived", Toast.LENGTH_SHORT).show();
                 break;
         }

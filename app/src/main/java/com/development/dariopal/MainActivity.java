@@ -10,7 +10,7 @@ import android.view.View;
 import android.widget.Button;
 
 import com.development.dariopal.database.DBManagerInterface;
-import com.development.dariopal.neura_manager.Constants;
+import com.development.dariopal.neura_manager.NeuraEventConstants;
 import com.development.dariopal.neura_manager.NeuraManager;
 import com.development.dariopal.otto.BusManager;
 import com.development.dariopal.service.DarioPalService;
@@ -119,7 +119,7 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
      */
     @Override
     public void onActivityResult(int requestCode, int resultCode, Intent data) {
-        if (requestCode == Constants.NEURA_AUTHENTICATION_REQUEST_CODE && resultCode == FragmentActivity.RESULT_OK) {
+        if (requestCode == NeuraEventConstants.NEURA_AUTHENTICATION_REQUEST_CODE && resultCode == FragmentActivity.RESULT_OK) {
             ArrayList<Permission> permissions = NeuraManager.getInstance().getPermissions();
             Log.i(getClass().getSimpleName(), "user successfully authenticated with Neura");
             NeuraManager.getInstance().getClient().registerPushServerApiKey(this, getString(R.string.google_api_project_number));
