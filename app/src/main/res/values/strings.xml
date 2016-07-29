@@ -1,4 +1,5 @@
 <resources>
     <string name="app_name">DarioPal</string>
-    <string name="btn_label_login_neura">Neura Login</string>
+    <string name="btn_label_start_tracking">Start Tracking</string>
+    <string name="btn_label_stop_tracking">Stop Tracking</string>
 </resources>

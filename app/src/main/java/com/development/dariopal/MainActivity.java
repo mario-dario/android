@@ -1,6 +1,5 @@
 package com.development.dariopal;
 
-import android.content.Context;
 import android.content.Intent;
 import android.os.Bundle;
 import android.support.v4.app.FragmentActivity;
@@ -8,8 +7,8 @@ import android.support.v7.app.AppCompatActivity;
 import android.util.Log;
 import android.view.View;
 import android.widget.Button;
+import android.widget.Toast;
 
-import com.development.dariopal.database.DBManagerInterface;
 import com.development.dariopal.neura_manager.Constants;
 import com.development.dariopal.neura_manager.NeuraManager;
 import com.development.dariopal.otto.BusManager;
@@ -19,26 +18,29 @@ import com.neura.sdk.service.SubscriptionRequestCallbacks;
 
 import java.util.ArrayList;
 
-public class MainActivity extends AppCompatActivity implements View.OnClickListener{
+import butterknife.BindView;
+import butterknife.ButterKnife;
+import butterknife.OnClick;
+
+public class MainActivity extends AppCompatActivity implements View.OnClickListener {
 
 
-    Long originTime;
-    Context context;
-    Button btnLoginNeura;
-    Intent darioServiceIntent ;
-    private DBManagerInterface dbManagerInterface;
+    @BindView(R.id.btnStartTrackingService)
+    Button btnStartTrackingService;
+
+    @BindView(R.id.btnStopTrackingService)
+    Button btnStopTrackingService;
+
+    private Intent darioServiceIntent;
+
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-
-        darioServiceIntent = new Intent(getApplicationContext(), DarioPalService.class);
-
         setContentView(R.layout.activity_main);
-        findViews();
-        setListeners();
-        context = this;
+        ButterKnife.bind(this);
         NeuraManager.getInstance().initNeuraConnection(this);
-        context.startService(darioServiceIntent);
+        updateVisibility();
 //        dbManagerInterface = new DBManager(this);
 //        DarioDataReceiver.getDarioDataReceiver().start(this, new IDarioDataHandler() {
 //            @Override
@@ -62,15 +64,29 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
 //        }, 2000);
     }
 
-    @Override
-    protected void onResume() {
-           super.onResume();
-           BusManager.getInstance().register(this);
-
-
+    private void updateVisibility() {
+        if (DarioPalService.isInstanceCreated(this)){
+            showStopScreen();
+        } else {
+            showStartScreen();
+        }
     }
 
+    private void showStartScreen() {
+        btnStartTrackingService.setVisibility(View.VISIBLE);
+        btnStopTrackingService.setVisibility(View.INVISIBLE);
+    }
 
+    private void showStopScreen() {
+        btnStartTrackingService.setVisibility(View.INVISIBLE);
+        btnStopTrackingService.setVisibility(View.VISIBLE);
+    }
+
+    @Override
+    protected void onResume() {
+        super.onResume();
+        BusManager.getInstance().register(this);
+    }
 
     @Override
     protected void onPause() {
@@ -92,20 +108,45 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
 //        }
 //    }
 
-    private void setListeners() {
-        btnLoginNeura.setOnClickListener(this);
-    }
 
-    private void findViews() {
-        btnLoginNeura = (Button)findViewById(R.id.btnLogin);
-    }
 
-    @Override
+    @OnClick ({R.id.btnStartTrackingService, R.id.btnStopTrackingService})
     public void onClick(View v) {
-        switch (v.getId()){
-            case R.id.btnLogin:
-                NeuraManager.getInstance().loginToNeura();
+        switch (v.getId()) {
+            case R.id.btnStartTrackingService:
+                manageStartTrackButton();
                 break;
+            case R.id.btnStopTrackingService:
+                manageStopButton();
+                break;
+        }
+    }
+
+    private void manageStopButton() {
+        stopService();
+        NeuraManager.getInstance().logoutFromNeura();
+        updateVisibility();
+    }
+
+    private void manageStartTrackButton() {
+        if (!NeuraManager.getInstance().isConnected()){
+            NeuraManager.getInstance().loginToNeura();
+        } else {
+            startService();
+            showStopScreen();
+        }
+    }
+
+    public void startService(){
+        if (!DarioPalService.isInstanceCreated(this)){
+            darioServiceIntent = new Intent(getApplicationContext(), DarioPalService.class);
+            this.startService(darioServiceIntent);
+        }
+    }
+
+    public void stopService(){
+        if (DarioPalService.isInstanceCreated(this)){
+            this.stopService(darioServiceIntent);
         }
     }
 
@@ -138,19 +179,19 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
                             }
                         });
             }
+            startService();
+            updateVisibility();
         } else {
-            Log.e(getClass().getSimpleName(), "user failed to authenticate with Neura");
+            Toast.makeText(this, "Login Failed, Try Again", Toast.LENGTH_LONG).show();
         }
 
     }
 
     @Override
     protected void onDestroy() {
-        super.onDestroy();
         if (NeuraManager.getInstance().getClient() != null)
             NeuraManager.getInstance().getClient().disconnect();
-
-        context.stopService(darioServiceIntent);
+        super.onDestroy();
     }
 
 

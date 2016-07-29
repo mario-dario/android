@@ -1,6 +1,8 @@
 package com.development.dariopal.neura_manager;
 
 import android.content.Context;
+import android.os.Message;
+import android.widget.Toast;
 
 import com.development.dariopal.DarioPalApplication;
 import com.development.dariopal.MainActivity;
@@ -9,6 +11,7 @@ import com.neura.sdk.object.AuthenticationRequest;
 import com.neura.sdk.object.Permission;
 import com.neura.standalonesdk.service.NeuraApiClient;
 import com.neura.standalonesdk.util.Builder;
+import com.neura.standalonesdk.util.SDKUtils;
 
 import java.util.ArrayList;
 
@@ -82,5 +85,19 @@ public class NeuraManager {
         authenticationRequest.setPermissions(NeuraManager.getInstance().getPermissions());
         NeuraManager.getInstance().getClient().authenticate(Constants.NEURA_AUTHENTICATION_REQUEST_CODE,
                 authenticationRequest);
+    }
+
+    public void logoutFromNeura(){
+        mNeuraApiClient.forgetMe(true, new android.os.Handler.Callback() {
+            @Override
+            public boolean handleMessage(Message msg) {
+                Toast.makeText(mContext, "Good Bye", Toast.LENGTH_SHORT).show();
+                return true;
+            }
+        });
+    }
+
+    public boolean isConnected() {
+        return SDKUtils.isConnected(mContext, getClient());
     }
 }

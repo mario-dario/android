@@ -27,19 +27,19 @@ public class NotificationWrapper {
 
   public void buildNotification() {
 
-    Intent intent = new Intent(context, Class.forName(DarioGlucoConst.DARIO_LAUNCHER_ACTIVITY));
+//    Intent intent = new Intent(context, Class.forName(DarioGlucoConst.DARIO_LAUNCHER_ACTIVITY));
     nManager = (NotificationManager) context.getSystemService(Context.NOTIFICATION_SERVICE);
 
-    PendingIntent pendingIntent = PendingIntent.getActivity(context,
-        NOTIFICATION_ID, intent, PendingIntent.FLAG_UPDATE_CURRENT);
+//    PendingIntent pendingIntent = PendingIntent.getActivity(context,
+//        NOTIFICATION_ID, intent, PendingIntent.FLAG_UPDATE_CURRENT);
 
-    Notification.Action action = new Notification.Action(R.mipmap.ic_launcher, "open", pendingIntent);
+//    Notification.Action action = new Notification.Action(R.mipmap.ic_launcher, "open", pendingIntent);
     if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.KITKAT_WATCH) {
       builder = new Notification.Builder(context)
          .setContentTitle("SugarPal")
          .setContentText("All good! Sugar keeps an eye on you... ")
-         .setContentIntent(pendingIntent)
-          .addAction(action)
+//         .setContentIntent(pendingIntent)
+//          .addAction(action)
          .setSmallIcon(R.mipmap.ic_launcher);
     }
 

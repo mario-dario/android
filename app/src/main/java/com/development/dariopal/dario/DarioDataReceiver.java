@@ -4,8 +4,6 @@ import android.content.BroadcastReceiver;
 import android.content.Context;
 import android.content.Intent;
 
-import com.labstyle.darioandroid.dariosharedclasses.DarioIntentManager;
-import com.labstyle.darioandroid.dariosharedclasses.IDarioDataHandler;
 
 /**
  * Created by mario on 27/07/16.

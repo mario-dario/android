@@ -1,9 +1,12 @@
 package com.development.dariopal.service;
 
+import android.app.ActivityManager;
+import android.app.Application;
 import android.app.Notification;
 import android.app.NotificationManager;
 import android.app.PendingIntent;
 import android.app.Service;
+import android.content.Context;
 import android.content.Intent;
 import android.os.Binder;
 import android.os.IBinder;
@@ -23,10 +26,14 @@ import com.development.dariopal.otto.events.DarioPushEvent;
 import com.development.dariopal.otto.events.NeuraPushEvent;
 import com.squareup.otto.Subscribe;
 
+import java.util.List;
+
 
 public class DarioPalService extends Service
 {
     private DBManager dbManagerInterface;
+    private static String TAG = DarioPalService.class.getName();
+
 
 
     private static DarioPalService instance = null;
@@ -154,9 +161,19 @@ public class DarioPalService extends Service
 
     }
 
-    public static boolean isInstanceCreated() {
-        return instance != null;
-    }
+    public static boolean isInstanceCreated(Context context) {
+
+            final ActivityManager activityManager = (ActivityManager) context.getSystemService(Context.ACTIVITY_SERVICE);
+            final List<ActivityManager.RunningServiceInfo> services = activityManager.getRunningServices(Integer.MAX_VALUE);
+
+            for (ActivityManager.RunningServiceInfo runningServiceInfo : services) {
+                if (runningServiceInfo.service.getClassName().equals(TAG)){
+                    return true;
+                }
+            }
+            return false;
+        }
+
 }
 
 

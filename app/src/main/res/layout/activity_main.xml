@@ -10,10 +10,21 @@
     tools:context="com.development.dariopal.MainActivity">
 
     <Button
-        android:layout_alignParentBottom="true"
+        android:id="@+id/btnStartTrackingService"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:id="@+id/btnLogin"
-        android:text="@string/btn_label_login_neura"/>
+        android:layout_centerInParent="true"
+        android:background="@drawable/follow_me_btn_blue"
+        android:text="@string/btn_label_start_tracking"
+        android:visibility="invisible" />
+
+    <Button
+        android:id="@+id/btnStopTrackingService"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_centerInParent="true"
+        android:background="@drawable/follow_me_btn_orange"
+        android:text="@string/btn_label_stop_tracking"
+        android:visibility="invisible" />
 
 </RelativeLayout>
